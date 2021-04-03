@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+twitter4j:
+  apiKey: LvbuPjNlqSuzpcz7nqYT7iLb6
+  apiKeySecret: sQRW2cbADBRVIm9MhVRUxHu1PpjuXB45GE9j8EaLkz4fOOy6JQ
+  accessToken: 17145293-jQoNfgGPgMqYl17fNxPXKtKg2ev2Jblai2YmTf4zN
+  accessTokenSecret: npX1Nls5faaUNyJLkcQbOWMaMPowu9nKs86t3JTj4Hmjt
+
