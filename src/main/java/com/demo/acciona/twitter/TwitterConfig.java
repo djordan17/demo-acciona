@@ -1,10 +1,11 @@
-package com.demo.acciona.config;
+package com.demo.acciona.twitter;
 
 import java.util.Arrays;
 
-import com.demo.acciona.entity.Tweet;
-import com.demo.acciona.listener.TwitterMessageProducer;
-import com.demo.acciona.repository.TwitterRepository;
+import com.demo.acciona.manage.infraestructure.tweet.entity.TweetEntity;
+import com.demo.acciona.twitter.listener.TwitterMessageProducer;
+import com.demo.acciona.manage.infraestructure.tweet.repository.SpringTweetRepository;
+import com.demo.acciona.twitter.config.TwitterProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.MessageChannels;
@@ -31,7 +33,7 @@ public class TwitterConfig
 {
 
     private TwitterProperties twitterProperties;
-    private TwitterRepository twitterRepository;
+    private SpringTweetRepository twitterRepository;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -48,8 +50,7 @@ public class TwitterConfig
                 new TwitterMessageProducer(twitterStream, outputChannel);
 
         twitterMessageProducer.setTerms(Arrays.asList("java", "spring"));
-
-
+        twitterMessageProducer.setLanguages(Arrays.asList("es", "fr", "it", "en"));
         return twitterMessageProducer;
     }
 
@@ -78,22 +79,37 @@ public class TwitterConfig
     }
 
     @Bean
+    public DirectChannel saveChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
     public IntegrationFlow twitterFlow(MessageChannel outputChannel)
     {
         return IntegrationFlows.from(outputChannel)
                                .filter(Message.class, m -> ((Status)m.getPayload()).getUser().getFollowersCount() > 1500)
                                .log(v -> "Number followers: "+ ((Status)v.getPayload()).getUser().getFollowersCount())
-                               .handle(message -> {
-                                   final Status status = ((Status)message.getPayload());
-                                   twitterRepository.save(
-                                           Tweet.builder()
-                                                .user(status.getUser().getId())
-                                                .text(status.getText())
-                                                .locatization(status.getGeoLocation() != null ? status.getGeoLocation().toString() : null)
-                                                .validation(status.getUser().isVerified())
-                                                .build());
-                               })
+                               .log(v -> "Payload: "+ ((Status)v.getPayload()))
+                               .channel(saveChannel())
                                .get();
+
+    }
+
+    @Bean
+    public org.springframework.integration.dsl.IntegrationFlow saveFlow() {
+        return IntegrationFlows
+                .from(saveChannel())
+                .handle(message -> {
+                    final Status status = ((Status)message.getPayload());
+                    twitterRepository.save(
+                            TweetEntity.builder()
+                                       .user(status.getUser().getId())
+                                       .text(status.getText())
+                                       .locatization(status.getGeoLocation() != null ? status.getGeoLocation().toString() : null)
+                                       .validation(status.getUser().isVerified())
+                                       .build());
+                })
+                .get();
     }
 
 }

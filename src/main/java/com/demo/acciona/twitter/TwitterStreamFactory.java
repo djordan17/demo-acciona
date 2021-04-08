@@ -1,6 +1,7 @@
-package com.demo.acciona.config;
+package com.demo.acciona.twitter;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
+
 import twitter4j.TwitterStream;
 
 public class TwitterStreamFactory extends AbstractFactoryBean<TwitterStream> {

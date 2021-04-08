@@ -1,4 +1,4 @@
-package com.demo.acciona.entity;
+package com.demo.acciona.manage.infraestructure.tweet.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,14 +9,16 @@ import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "Tweet")
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class Tweet
+public class TweetEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +27,10 @@ public class Tweet
     @Column(nullable = false)
     private Long user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 8000)
     private String text;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String locatization;
 
     @Column(nullable = false)

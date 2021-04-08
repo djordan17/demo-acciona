@@ -1,21 +1,19 @@
-package com.demo.acciona.dto;
+package com.demo.acciona.manage.infraestructure.tweet.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @AllArgsConstructor
-public class TweetRsDto
+@NoArgsConstructor
+@Getter
+@Setter
+public class TweetDto
 {
-
     private Integer id;
-
     private Long user;
-
     private String text;
-
     private String locatization;
-
     private Boolean validation;
-
 }

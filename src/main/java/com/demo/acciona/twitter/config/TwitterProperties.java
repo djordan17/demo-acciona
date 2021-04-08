@@ -1,4 +1,4 @@
-package com.demo.acciona.config;
+package com.demo.acciona.twitter.config;
 
 import lombok.Getter;
 import lombok.Setter;
