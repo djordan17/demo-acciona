@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class TweetDboRepository implements TweetRepository
+public class H2SpringTweetRepository implements TweetRepository
 {
     private final SpringTweetRepository springTweetRepository;
     private final ModelMapper modelMapper;
