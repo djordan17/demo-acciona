@@ -10,7 +10,6 @@ import com.demo.acciona.manage.domain.Tweet;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -33,7 +32,6 @@ public class BasicTweetService implements TweetService
 
     }
 
-    @Transactional
     @Override
     public Tweet update(final Integer id,
                         final Tweet tweetRequest) throws Exception
